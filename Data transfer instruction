@@ -1,0 +1,91 @@
+    1)  Place the number 3BH in internal RAM locations 30h to 32h
+CSEG AT 0
+MOV A, #3BH
+MOV 30H, A
+MOV 31H, A
+MOV 32H, A
+END
+
+              (OR)
+
+CSEG AT 0
+MOV 30H,#3BH
+MOV 31H,#3BH
+MOV 32H,#3BH
+END
+
+    2) Copy the byte at internal RAM address 27H to external RAM address 27H
+       CSEG AT 0
+       MOV DPTR, #27H
+       MOV 27H, #30H 
+       MOV A,27H	
+       MOVX  @DPTR, A
+END
+
+    3) Set timer1 to A23DH.
+CSEG AT 0
+MOV TL1, #3DH
+MOV TH1, #A2H
+END
+
+                  (OR)
+
+CSEG AT 0
+MOV DPTR,#A23DH
+MOVX TL1,@DPL
+MOVX TH1,@DPH
+
+    4) Copy the data in external RAM location 0123H to TL0 and data in external RAM location 0234H to TH0.
+CSEG AT 0
+MOV DPTR, #0123H
+MOVX  A, @DPTR
+MOV TL0, A
+MOV DPTR, #0234H
+MOVX  A,@DPTR
+MOV TH0, A
+END
+
+    5) Exchange the contents of B register and external RAM address 02CFH
+CSEG AT 0
+MOV DPTR, #02CFH
+MOVX  A,@DPTR
+MOV 20H,A
+MOV B,#25H
+MOV A, B
+MOVX @DPTR,A
+MOV B, 20H
+END
+
+
+    6) Copy the internal code byte at address 0300H to external RAM address 0300h.
+CSEG AT 0300H
+AK: DB 20H
+CSEG AT 0
+MOV DPTR,#0300H
+MOVC A, @A+DPTR
+MOVX @DPTR, A
+END
+
+    7) Exchange both low nibbles of registers R0 and R1. Put the lower nibble of R0 in R1, and the low nibble of R1 is R0.
+CSEG AT 0
+MOV  R0, #35H
+MOV R1, #45H
+XCH A,R1
+XCHD A, @R1
+MOV R1, A
+END
+    8) Push the contents of the B register to TMOD
+CSEG AT 0
+MOV B,#30H
+PUSH 0F0H
+POP 89H
+END
+             (OR)
+CSEG AT 0
+MOV B, #30H
+       PUSH B
+POP TMOD
+END
+
+
+
